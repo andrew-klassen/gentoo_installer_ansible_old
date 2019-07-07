@@ -9,16 +9,35 @@ fi
 
 
 # login info for ansible
-read -p "Ssh username (needs sudo power): " ssh_username
-read -s -p "Ssh password: " ssh_password
+#read -p "Ssh username (needs sudo power): " ssh_username
+#read -s -p "Ssh password: " ssh_password
 
 echo ''
 
 # skip installing ansible if already installed
 if ! command -v ansible > /dev/null 2>&1; then
-        emerge --sync
+        mkdir /new_root
+	cd /new_root
+	wget https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-20190703T214502Z.tar.xz -O stage3-amd64.tar.xz
+	tar xf stage3-amd64.tar.xz
+	cd usr
+	wget https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz -O portage-latest.tar.xz
+	tar xf portage-latest.tar.xz
+	
+	
+	/mnt/livecd/bin/ln -sfn /new_root/bin /bin
+	/mnt/livecd/bin/ln -sfn /new_root/boot /boot
+	mv /etc /etc_old
+	mkdir /etc
+	/mnt/livecd/bin/ln -s /new_root/etc /etc
+	/mnt/livecd/bin/ln -sfn /new_root/lib64 /lib64
+	/mnt/livecd/bin/ln -sfn /new_root/opt /opt
+	/mnt/livecd/bin/ln -sfn /new_root/sbin /sbin
+	/mnt/livecd/bin/ln -sfn /new_root/usr /usr
+	
+	emerge --sync
         eselect profile set 1
-	emerge --keep-going app-admin/ansible	
+	
 
 else
 
@@ -29,7 +48,6 @@ else
 fi
 
 
-cd ansible
+#cd ansible
 
 #ansible-playbook install.yml -e "ansible_user=${ssh_username} ansible_ssh_pass=${ssh_password} ansible_sudo_pass=${ssh_password}"	
-
