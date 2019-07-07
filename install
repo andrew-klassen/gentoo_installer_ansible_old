@@ -29,7 +29,6 @@ if ! command -v ansible > /dev/null 2>&1; then
 	/mnt/livecd/bin/ln -sfn /new_root/bin /bin
 	/mnt/livecd/bin/ln -sfn /new_root/boot /boot
 	mv /etc /etc_old
-	mkdir /etc
 	/mnt/livecd/bin/ln -s /new_root/etc /etc
 	/mnt/livecd/bin/ln -sfn /new_root/lib64 /lib64
 	/mnt/livecd/bin/ln -sfn /new_root/opt /opt
