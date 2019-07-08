@@ -9,8 +9,8 @@ fi
 
 
 # login info for ansible
-#read -p "Ssh username (needs sudo power): " ssh_username
-#read -s -p "Ssh password: " ssh_password
+read -p "Ssh username (needs sudo power): " ssh_username
+read -s -p "Ssh password: " ssh_password
 
 echo ''
 
@@ -65,6 +65,6 @@ else
 fi
 
 
-#cd ansible
+cd ansible
 
-#ansible-playbook install.yml -e "ansible_user=${ssh_username} ansible_ssh_pass=${ssh_password} ansible_sudo_pass=${ssh_password}"	
+ansible-playbook install.yml -e "ansible_user=${ssh_username} ansible_ssh_pass=${ssh_password} ansible_sudo_pass=${ssh_password}"	
