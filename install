@@ -17,7 +17,7 @@ echo ''
 # skip installing ansible if already installed
 if ! command -v ansible > /dev/null 2>&1; then
 	mount -o remount,size=10g /
-        mkdir /new_root
+        mkdir -p /new_root
 	cd /new_root
 	wget https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-20190703T214502Z.tar.xz -O stage3-amd64.tar.xz
 	tar xf stage3-amd64.tar.xz
@@ -25,11 +25,13 @@ if ! command -v ansible > /dev/null 2>&1; then
 	wget https://gentoo.osuosl.org/snapshots/portage-latest.tar.xz -O portage-latest.tar.xz
 	tar xf portage-latest.tar.xz
 	
-	
 	/mnt/livecd/bin/ln -sfn /new_root/bin /bin
 	/mnt/livecd/bin/ln -sfn /new_root/boot /boot
+	
 	mv /etc /etc_old
 	/mnt/livecd/bin/ln -s /new_root/etc /etc
+	cp -L /etc_old/resolv.conf /etc/resolv.conf
+	
 	/mnt/livecd/bin/ln -sfn /new_root/lib64 /lib64
 	/mnt/livecd/bin/ln -sfn /new_root/opt /opt
 	/mnt/livecd/bin/ln -sfn /new_root/sbin /sbin
@@ -45,7 +47,14 @@ if ! command -v ansible > /dev/null 2>&1; then
 	USE="-nls" emerge =sys-apps/help2man-1.47.6
    	emerge dev-vcs/git
 	
+	USE="sqlite" emerge =dev-lang/python-3.6.5
+	USE="sqlite" emerge =dev-lang/python-2.7.15:2.7
 	
+	emerge app-admin/ansible
+	emerge app-admin/ansible
+	
+	mkdir -p gentoo_install_repo
+	git clone https://github.com/andrew-klassen/gentoo_installer.git gentoo_install_repo
 
 else
 
