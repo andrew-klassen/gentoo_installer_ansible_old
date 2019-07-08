@@ -1,10 +1,6 @@
 
 - name: install dependencies
-  portage:
-    name: "{{ packages }}"
-  vars:
-    packages:
-    - sys-block/gparted
+  command: emerge sys-apps/gptfdisk sys-fs/lvm2 sys-block/parted
 
 - name: create esp partition
   parted:
@@ -21,4 +17,24 @@
     label: gpt
     part_start: 100MB
     state: present
+    
+- name: adjust partition labels
+  shell: | 
+    #!/bin/bash
+    sgdisk --typecode=1:0xEF00 /dev/sda
+    sgdisk --typecode=2:0x8E00 /dev/sda
+
+- name: change partition names
+  shell: |
+    #!/bin/bash
+    sgdisk --change-name=1:esp /dev/sda
+    sgdisk --change-name=2:root /dev/sda
+
+- name: Create a logical volume of 512m with disks /dev/sda and /dev/sdb
+  lvol:
+    vg: root-vg
+    lv: root-lv
+    size: 100%FREE
+    pvs: /dev/sda2
+
 
